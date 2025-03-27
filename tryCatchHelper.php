@@ -10,7 +10,7 @@ if(!function_exists('try_catch'))
      * @param callable $callable
      * @param bool $throwError
      * @param bool $logErrors
-     * @return array
+     * @return array{data: mixed, error: ?Throwable} Associative array containing 'data' with the result of the operation or null (failure), and 'error' with the caught exception or null (success)
      * @throws Throwable
      */
     function try_catch(callable $callable, bool $throwError = false, bool $logErrors = true): array
