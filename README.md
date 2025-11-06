@@ -71,6 +71,7 @@ Use `callbleOnError` param. It will return `callbleOnErrorReturn` with:
 
 ```php
 $result = tryIt(fn () => someErrorWillThrow(), callbleOnError: fn () => doAnotherThing())
+
 if($result->error !== null && $result->callbleOnErrorReturn instanceof Throwable)
     doSomeThingWithThisError();
 ```
