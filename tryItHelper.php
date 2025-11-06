@@ -5,12 +5,20 @@ if(!function_exists('tryIt'))
     /**
      * Executes a callable and returns the result or error in a structured object.
      *
-     * @param  callable  $callable
-     * @param  bool  $throwError  It throws an error and will not return any value
-     * @param  bool  $logErrors  Write the error to the system log
+     * @param  callable|Closure  $callable  Callable to execute
+     * @param  bool  $throwError  Whether to throw the error
+     * @param  bool  $logErrors  Whether to log the error
      * @param  Closure|null  $callbleOnError  Callable to execute on error
      *
-     * @return array{data: mixed, error: ?Throwable} Object containing 'data' with the result of the operation or null (failure), and 'error' with the caught exception or null (success)
+     * @return object{data: mixed, error: ?Throwable, callbleOnErrorReturn: mixed|Throwable} 
+     * Object containing:
+     * - 'data' with the result of the operation or null (failure), 
+     * - 'error' with the caught exception or null (success)
+     * - 'callbleOnErrorReturn' with:
+     *  - null when there is no prior error (default)
+     *  - result<mixed> of the callbleOnError() if theres a previous error
+     *  - Throwable if callbleOnError() fails
+     *
      * @throws Throwable
      */
     function tryIt(callable|Closure $callable, bool $throwError = false, bool $logErrors = true, ?Closure $callbleOnError = null): object
@@ -18,6 +26,7 @@ if(!function_exists('tryIt'))
         $result = new class {
             public $data = null;
             public $error = null;
+            public mixed $callbleOnErrorReturn = null;
         };
 
         try {
@@ -26,8 +35,10 @@ if(!function_exists('tryIt'))
         } catch (Throwable $e) {
             if (is_callable($callbleOnError)) {
                 try {
-                    $callbleOnError();
-                } catch(Throwable $ce) {}
+                    $result->callbleOnErrorReturn = $callbleOnError();
+                } catch (Throwable $ce) {
+                    $result->callbleOnErrorReturn = $ce;
+                }
             }
 
             if ($logErrors) {
