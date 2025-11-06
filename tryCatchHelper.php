@@ -24,14 +24,14 @@ if(!function_exists('try_catch'))
             $result->data = $callable();
             return $result;
         } catch (Throwable $e) {
-            if ($logErrors) {
-                error_log($e);
-            }
-
             if (is_callable($callbleOnError)) {
                 try {
                     $callbleOnError();
                 } catch(Throwable $ce) {}
+            }
+
+            if ($logErrors) {
+                error_log($e);
             }
 
             if($throwError)
