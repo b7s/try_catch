@@ -60,7 +60,7 @@ try_catch(static fn() => criticalOperation(), throwError: true);
 try_catch(fn() => someOperation(), logErrors: false);
 
 // Call a function when an error occurs.
-try_catch(fn() => someOther(), onErrorClosure: fn () => doAnotherThing())
+try_catch(fn() => someOther(), callbleOnError: fn () => doAnotherThing())
 ```
 
 Perfect for simplifying error handling in Laravel applications while maintaining clean, readable code.
