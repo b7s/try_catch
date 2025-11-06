@@ -47,10 +47,10 @@ $result = try_catch(function() {
     return User::find(1);
 });
 
-if ($result['error']) {
+if ($result->error) {
     // Handle error
 } else {
-    $user = $result['data'];
+    $user = $result->data;
 }
 
 // Automatically throw exceptions instead of returning them
