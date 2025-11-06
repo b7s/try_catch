@@ -13,25 +13,33 @@ if(!function_exists('try_catch'))
      * @return array{data: mixed, error: ?Throwable} Associative array containing 'data' with the result of the operation or null (failure), and 'error' with the caught exception or null (success)
      * @throws Throwable
      */
-    function try_catch(callable $callable, bool $throwError = false, bool $logErrors = true): array
+    function try_catch(callable|Closure $callable, bool $throwError = false, bool $logErrors = true, ?Closure $onErrorClosure = null): object
     {
+        $result = new class {
+            public $data = null;
+            public $error = null;
+        };
+
         try {
-            $data = $callable();
-            return ['data' => $data, 'error' => null];
+            $result->data = $callable();
+            return $result;
         } catch (Throwable $e) {
             if ($logErrors) {
                 Log::error($e->getMessage(), [
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine(),
+                    'file'  => $e->getFile(),
+                    'line'  => $e->getLine(),
                     'trace' => $e->getTraceAsString(),
                 ]);
             }
 
-            if($throwError) {
-                throw $e;
+            throw_if($throwError, fn() => throw $e);
+
+            if (is_callable($onErrorClosure)) {
+                $onErrorClosure();
             }
 
-            return ['data' => null, 'error' => $e];
+            $result->error = $e;
+            return $result;
         }
     }
 }
