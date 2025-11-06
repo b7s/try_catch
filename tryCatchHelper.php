@@ -1,15 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Log;
-
 if(!function_exists('try_catch'))
 {
     /**
      * Executes a callable and returns the result or error in a structured object.
      *
      * @param  callable  $callable
-     * @param  bool  $throwError
-     * @param  bool  $logErrors
+     * @param  bool  $throwError  It throws an error and will not return any value
+     * @param  bool  $logErrors  Write the error to the system log
      * @param  Closure|null  $callbleOnError  Callable to execute on error
      *
      * @return array{data: mixed, error: ?Throwable} Associative array containing 'data' with the result of the operation or null (failure), and 'error' with the caught exception or null (success)
@@ -27,18 +25,17 @@ if(!function_exists('try_catch'))
             return $result;
         } catch (Throwable $e) {
             if ($logErrors) {
-                Log::error($e->getMessage(), [
-                    'file'  => $e->getFile(),
-                    'line'  => $e->getLine(),
-                    'trace' => $e->getTraceAsString(),
-                ]);
+                error_log($e);
             }
-
-            throw_if($throwError, fn() => throw $e);
 
             if (is_callable($callbleOnError)) {
-                $callbleOnError();
+                try {
+                    $callbleOnError();
+                } catch(Throwable $ce) {}
             }
+
+            if($throwError)
+                throw $e;
 
             $result->error = $e;
             return $result;
