@@ -58,6 +58,9 @@ try_catch(static fn() => criticalOperation(), throwError: true);
 
 // Disable automatic error logging
 try_catch(fn() => someOperation(), logErrors: false);
+
+// Call a function when an error occurs.
+try_catch(fn() => someOther(), onErrorClosure: fn () => doAnotherThing())
 ```
 
 Perfect for simplifying error handling in Laravel applications while maintaining clean, readable code.
