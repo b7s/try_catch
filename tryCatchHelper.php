@@ -10,7 +10,7 @@ if(!function_exists('try_catch'))
      * @param  bool  $logErrors  Write the error to the system log
      * @param  Closure|null  $callbleOnError  Callable to execute on error
      *
-     * @return array{data: mixed, error: ?Throwable} Associative array containing 'data' with the result of the operation or null (failure), and 'error' with the caught exception or null (success)
+     * @return array{data: mixed, error: ?Throwable} Object containing 'data' with the result of the operation or null (failure), and 'error' with the caught exception or null (success)
      * @throws Throwable
      */
     function try_catch(callable|Closure $callable, bool $throwError = false, bool $logErrors = true, ?Closure $callbleOnError = null): object
