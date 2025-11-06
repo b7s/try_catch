@@ -24,7 +24,7 @@ In Laravel, custom helper files are not loaded automatically. You need to regist
 ```json
 "autoload": {
     "files": [
-        "app/Helpers/tryIt.php"
+        "app/Support/Helpers/tryItHelper.php"
     ],
     "psr-4": {
         "App\\": "app/"
@@ -44,9 +44,9 @@ This ensures that the helpers.php file is automatically included in all requests
 
 ```php
 // Basic usage
-$result = tryIt(function() {
+$result = tryIt(function () {
     // Your code that might throw an exception
-    return User::find(1);
+    return callSomeFunction();
 });
 
 if ($result->error) {
@@ -56,13 +56,23 @@ if ($result->error) {
 }
 
 // Automatically throw exceptions instead of returning them
-tryIt(static fn() => criticalOperation(), throwError: true);
+tryIt(static fn () => criticalOperation(), throwError: true);
 
 // Disable automatic error logging
-tryIt(fn() => someOperation(), logErrors: false);
+tryIt(fn () => someOperation(), logErrors: false);
+```
 
-// Call a function when an error occurs.
-tryIt(fn() => someErrorWillThrow(), callbleOnError: fn () => doAnotherThing())
+### Sometimes you want to do something when your call fails
+
+Use `callbleOnError` param. It will return `callbleOnErrorReturn` with:
+- `null`: when there is no prior error (default)
+- `mixed`: the result of the callbleOnError() (if any)
+- `Throwable`: if callbleOnError() fails
+
+```php
+$result = tryIt(fn () => someErrorWillThrow(), callbleOnError: fn () => doAnotherThing())
+if($result->error !== null && $result->callbleOnErrorReturn instanceof Throwable)
+    doSomeThingWithThisError();
 ```
 
 Perfect for simplifying error handling in Laravel applications while maintaining clean, readable code.
