@@ -1,6 +1,6 @@
 <?php
 
-if(!function_exists('try_catch'))
+if(!function_exists('tryIt'))
 {
     /**
      * Executes a callable and returns the result or error in a structured object.
@@ -13,7 +13,7 @@ if(!function_exists('try_catch'))
      * @return array{data: mixed, error: ?Throwable} Object containing 'data' with the result of the operation or null (failure), and 'error' with the caught exception or null (success)
      * @throws Throwable
      */
-    function try_catch(callable|Closure $callable, bool $throwError = false, bool $logErrors = true, ?Closure $callbleOnError = null): object
+    function tryIt(callable|Closure $callable, bool $throwError = false, bool $logErrors = true, ?Closure $callbleOnError = null): object
     {
         $result = new class {
             public $data = null;
