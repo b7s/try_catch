@@ -1,6 +1,6 @@
 # PHP Try-Catch Helper
 
-A simple yet powerful PHP/Laravel helper function that streamlines error handling throughout your Laravel application.
+tryIt() is a simple, yet powerful PHP helper function that streamlines error handling throughout your PHP application.
 
 ## Description
 
@@ -17,12 +17,14 @@ This helper function wraps operations in a try-catch block and returns a structu
 
 ## Add to Autoload:
 
+### Laravel Example:
+
 In Laravel, custom helper files are not loaded automatically. You need to register the file with the Composer autoloader. Open the `composer.json` file in the root of your project and add the path to your helper in the autoload section:
 
 ```json
 "autoload": {
     "files": [
-        "app/Helpers/tryCatchHelper.php"
+        "app/Helpers/tryIt.php"
     ],
     "psr-4": {
         "App\\": "app/"
@@ -42,7 +44,7 @@ This ensures that the helpers.php file is automatically included in all requests
 
 ```php
 // Basic usage
-$result = try_catch(function() {
+$result = tryIt(function() {
     // Your code that might throw an exception
     return User::find(1);
 });
@@ -54,13 +56,13 @@ if ($result->error) {
 }
 
 // Automatically throw exceptions instead of returning them
-try_catch(static fn() => criticalOperation(), throwError: true);
+tryIt(static fn() => criticalOperation(), throwError: true);
 
 // Disable automatic error logging
-try_catch(fn() => someOperation(), logErrors: false);
+tryIt(fn() => someOperation(), logErrors: false);
 
 // Call a function when an error occurs.
-try_catch(fn() => someOther(), callbleOnError: fn () => doAnotherThing())
+tryIt(fn() => someErrorWillThrow(), callbleOnError: fn () => doAnotherThing())
 ```
 
 Perfect for simplifying error handling in Laravel applications while maintaining clean, readable code.
